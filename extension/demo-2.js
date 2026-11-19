@@ -1,0 +1,9 @@
+
+let autoMode=false;
+const baseRender=render,baseTick=tick;
+function autoDelay(){const a=Number($('min').value),b=Number($('max').value);if(!Number.isInteger(a)||!Number.isInteger(b)||a<1||b<a||b>3600)throw Error('请输入有效间隔：1–3600 秒，最长不小于最短');return (a+Math.floor(Math.random()*(b-a+1)))*1000}
+function addSwitch(){if(!$('send')||$('auto'))return;const label=document.createElement('label');label.style='margin:0;display:flex;align-items:center;gap:8px';const input=document.createElement('input');input.type='checkbox';input.id='auto';input.setAttribute('role','switch');input.checked=autoMode;label.append(input,document.createTextNode('自动（模拟）'));$('send').after(label);const note=$('send').parentElement.nextElementSibling;if(note)note.textContent='手动模式逐条确认；自动模式连续使用当前草稿模拟点赞和回复。关闭开关或暂停即可停止；刷新页面回到手动模式。';input.onchange=()=>{autoMode=input.checked;if(autoMode){try{s.until=Math.max(s.until,Date.now()+autoDelay());$('error').textContent=''}catch(e){autoMode=false;input.checked=false;$('error').textContent=e.message;return}}log(autoMode?'开启自动模拟':'切换手动模式');tick()}}
+render=function(){if(!current())autoMode=false;baseRender();addSwitch();tick()};
+tick=function(){baseTick();if(!current()){autoMode=false;return}if(!autoMode)return;const left=Math.max(0,Math.ceil((s.until-Date.now())/1000));if($('send'))$('send').disabled=true;if(s.paused){$('status').textContent='自动模式已暂停，不会执行后续操作';return}if(!$('draft')||!$('draft').value.trim()){$('status').textContent='自动模式等待：请填写回复';return}$('status').textContent=`自动模式：${left} 秒后模拟点赞并回复`;if(left===0){try{autoDelay()}catch(e){autoMode=false;if($('auto'))$('auto').checked=false;$('error').textContent=e.message;return}if($('send'))$('send').onclick()}};
+const originalReset=$('reset').onclick;$('reset').onclick=()=>{autoMode=false;originalReset();if($('auto'))$('auto').checked=false;tick()};
+render();setInterval(()=>tick(),250);

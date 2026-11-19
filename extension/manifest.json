@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "好友互动助手 · 预览版",
+  "version": "0.6.9",
+  "minimum_chrome_version": "116",
+  "permissions": [
+    "sidePanel",
+    "storage",
+    "alarms"
+  ],
+  "side_panel": {
+    "default_path": "dashboard.html"
+  },
+  "optional_permissions": [
+    "scripting"
+  ],
+  "optional_host_permissions": [
+    "https://x.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://x.com/*"],
+      "js": ["timeline-graphql.js", "timeline-sniff.js"],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": false
+    }
+  ],
+  "description": "本地只读采集 X 目标帖、云端草稿、人工审核后自动回复并点赞。不调用 X 官方 API。",
+  "action": {
+    "default_title": "打开好友互动助手"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["dashboard.html"],
+      "matches": ["https://x.com/*"]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; connect-src https://api.siliconflow.cn https://api.deepseek.com"
+  }
+}

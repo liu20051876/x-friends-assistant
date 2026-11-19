@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>好友互动助手 · 工作台</title>
+<link rel="stylesheet" href="dashboard.css">
+<header><div class="brand"><span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><h1>好友互动助手</h1></div><small>0.6.9 · 不调用 X API</small></header>
+<div class="sbar">
+  <div class="sbar-stats">
+    <span>今日已发 <b id="sb-sent">0</b>/<span id="sb-limit">30</span></span>
+    <button class="link" id="sb-review" title="查看待你确认的帖子">待确认 <b id="sb-review-n">0</b></button>
+    <button class="link" id="sb-approved" title="查看已通过、等待发送的帖子">待发 <b id="sb-approved-n">0</b></button>
+    <button class="link" id="sb-problem" title="查看失败或待核实的帖子" hidden>需核实 <b id="sb-problem-n" style="color:#b42318">0</b></button>
+    <button id="sb-grant" class="primary" style="padding:4px 10px;font-size:13px" hidden>授权 X</button>
+    <span id="sb-run" class="sbar-run">未在发送</span>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-tab="work" aria-selected="true">工作台<span id="tab-work-dot" class="dot" hidden></span></button>
+    <button role="tab" data-tab="roster" aria-selected="false">名单</button>
+    <button role="tab" data-tab="original" aria-selected="false">原创<span id="tab-original-dot" class="dot" hidden></span></button>
+    <button role="tab" data-tab="settings" aria-selected="false">设置</button>
+  </nav>
+</div>
+<main>
+<div id="tab-work" class="tab-pane">
+  <section id="onboard" class="panel onboard" hidden>
+    <div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0">开始之前</h2><button id="ob-hide" style="padding:3px 10px;font-size:13px">不再显示</button></div>
+    <ol>
+      <li id="ob-key">填写 AI 密钥并测试连通 <button data-goto="settings">去设置</button></li>
+      <li id="ob-perm">授权扩展读取 X 页面 <button id="ob-grant">授权 X</button></li>
+      <li id="ob-roster">读取并确认互关名单 <button data-goto="roster">去名单</button></li>
+      <li id="ob-collect">采集第一批目标帖（建议先选 10 人试跑）</li>
+    </ol>
+  </section>
+</div>
+<div id="tab-roster" class="tab-pane" hidden></div>
+<div id="tab-original" class="tab-pane" hidden></div>
+<div id="tab-settings" class="tab-pane" hidden>
+  <details class="panel" id="demo-box">
+    <summary><strong>演示模式</strong> <small class="muted">· 用虚构账号练习审核节奏，不产生任何真实互动</small></summary>
+    <div class="notice" style="margin-top:12px">这里的数据与真实队列完全无关，导入的 CSV 只用于演示。</div>
+    <label class="file">导入未回关 CSV（演示）<input type="file" id="csv" accept=".csv" hidden></label><p id="importInfo">尚未导入排除名单</p><p id="error" role="alert"></p>
+    <details><summary>查看演示候选</summary><p id="friends"></p></details>
+    <label>最短<input id="min" type="number" min="1" max="3600" value="3"> 秒</label><label>最长<input id="max" type="number" min="1" max="3600" value="6"> 秒</label>
+    <div class="actions"><button id="pause">暂停</button><button id="reset">重置演示</button></div><p id="status" class="status" aria-live="polite"></p>
+    <div class="stats"><div><b id="total">0</b><small>符合条件</small></div><div><b id="done">0</b><small>模拟完成</small></div><div><b id="skipped">0</b><small>已跳过</small></div></div>
+    <div id="card"></div>
+    <h2>演示记录</h2><div id="log" class="log"></div>
+  </details>
+</div>
+</main>
+<script src="demo-1.js"></script>
+<script src="demo-2.js"></script>
+<script src="roster.js"></script>
+<script src="graph-logic.js"></script>
+<script src="following-ui.js"></script>
+<script src="x-reader.js"></script>
+<script src="queue-store.js"></script>
+<script src="original-store.js"></script>
+<script src="filter-rules.js"></script>
+<script src="collect-ui.js"></script>
+<script src="config-ui.js"></script>
+<script src="original-ui.js"></script>
+<script src="shell-ui.js"></script>
+</body></html>
